@@ -9,6 +9,7 @@
     "alwaysStrict": true,
     "strictNullChecks": true,
     "types": ["chrome"],
+    "composite": true,
     "paths": {
       "@/*": ["./src/*"]
     }
