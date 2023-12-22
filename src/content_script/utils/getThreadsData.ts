@@ -71,11 +71,9 @@ const filterThreadsData = (
 export const getThreadsData = async (videoData: {
   normal?: VideoData[]
   splited?: VideoData[]
-}, niconicoApi: typeof NiconicoApi): Promise<{
+}, niconicoApi: typeof NiconicoApi, useNgList: boolean): Promise<{
   [videoId: string]: ThreadsData
 } | null> => {
-  const settings = await WebExtStorageApi.getSettings()
-
   videoData.normal ??= []
   videoData.splited ??= []
 
@@ -93,7 +91,7 @@ export const getThreadsData = async (videoData: {
       if (res) {
         threadsDataNormal[data.video.id] = filterThreadsData(
           res,
-          settings.useNgList ? data.comment.ng : null
+          useNgList ? data.comment.ng : null
         )
       }
     }
@@ -124,7 +122,7 @@ export const getThreadsData = async (videoData: {
 
         threadsDataSplited[data.video.id] = filterThreadsData(
           res,
-          settings.useNgList ? data.comment.ng : null
+          useNgList ? data.comment.ng : null
         )
       } else {
         threadsDataSplited = {}

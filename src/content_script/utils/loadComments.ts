@@ -60,12 +60,12 @@ export const loadComments = async (
   const initData: InitData[] = []
 
   // 通常
-  const normalInitData = await loadCommentsNormal(info, NiconicoApi)
+  const normalInitData = await loadCommentsNormal(info, NiconicoApi, settings.useNgList)
   initData.push(...normalInitData)
 
   // コメント専用動画
   if (settings.szbhMethod) {
-    const szbhInitData = await loadCommentsSZBH(info, NiconicoApi)
+    const szbhInitData = await loadCommentsSZBH(info, NiconicoApi, settings.useNgList)
     initData.push(...szbhInitData)
   }
 
@@ -79,7 +79,8 @@ export const loadComments = async (
  */
 export const loadCommentsNormal = async (
   info: Parameters<typeof getSearchData>[0],
-  niconicoApi: typeof NiconicoApi
+  niconicoApi: typeof NiconicoApi,
+  useNgList: boolean
 ): Promise<InitData[]> => {
   console.log('[NCOverlay] loadCommentsNormal()')
 
@@ -104,7 +105,7 @@ export const loadCommentsNormal = async (
   videoData.splited = filterVideoData(videoData.splited, { anime: true })
 
   // コメント情報
-  const threadsData = await getThreadsData(videoData, niconicoApi)
+  const threadsData = await getThreadsData(videoData, niconicoApi, useNgList)
   if (!threadsData) return []
 
   const videoDataValues = Object.values(videoData).flat()
@@ -151,7 +152,8 @@ export const loadCommentsNormal = async (
  */
 export const loadCommentsSZBH = async (
   info: Parameters<typeof getSearchData>[0],
-  niconicoApi: typeof NiconicoApi
+  niconicoApi: typeof NiconicoApi,
+  useNgList: boolean
 ): Promise<InitData[]> => {
   console.log('[NCOverlay] loadCommentsSZBH()')
 
@@ -189,7 +191,7 @@ export const loadCommentsSZBH = async (
   videoData.normal = filterVideoData(videoData.normal)
 
   // コメント情報
-  const threadsData = await getThreadsData(videoData, niconicoApi)
+  const threadsData = await getThreadsData(videoData, niconicoApi, useNgList)
   if (!threadsData) return []
 
   const videoDataValues = Object.values(videoData).flat()
