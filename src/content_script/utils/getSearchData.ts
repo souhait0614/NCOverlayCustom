@@ -33,7 +33,7 @@ export const getSearchData = async (info: {
   filters?: SearchQuery['filters']
   /** タイトルの一致判定を厳密にする */
   strictMatch?: boolean
-}): Promise<{
+}, niconicoApi: typeof NiconicoApi): Promise<{
   normal: SearchData[]
   splited: SearchData[]
 } | null> => {
@@ -56,7 +56,7 @@ export const getSearchData = async (info: {
   const searchDataSplited: SearchData[] = []
 
   // 検索 (通常)
-  const searchNormal = await NiconicoApi.search([
+  const searchNormal = await niconicoApi.search([
     deepmerge(info.strictMatch ? searchQueryBase : searchQueryBaseWeakMatch, {
       q: optimizedTitle,
       filters: deepmerge(
@@ -94,7 +94,7 @@ export const getSearchData = async (info: {
     ((1800 < info.duration && /劇場|映画/.test(info.title)) ||
       3600 < info.duration)
   ) {
-    const searchSplited = await NiconicoApi.search([
+    const searchSplited = await niconicoApi.search([
       deepmerge(info.strictMatch ? searchQueryBase : searchQueryBaseWeakMatch, {
         q: `${optimizedTitle} Chapter.`,
         filters: deepmerge(

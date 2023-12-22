@@ -6,6 +6,7 @@ import { WebExtStorageApi } from '@/utils/webext/storage'
 import { getSearchData } from './getSearchData'
 import { getVideoData } from './getVideoData'
 import { getThreadsData } from './getThreadsData'
+import { NiconicoApi } from '../api/niconico'
 
 // const SZBH_USER_IDS = [289866]
 
@@ -59,12 +60,12 @@ export const loadComments = async (
   const initData: InitData[] = []
 
   // 通常
-  const normalInitData = await loadCommentsNormal(info)
+  const normalInitData = await loadCommentsNormal(info, NiconicoApi)
   initData.push(...normalInitData)
 
   // コメント専用動画
   if (settings.szbhMethod) {
-    const szbhInitData = await loadCommentsSZBH(info)
+    const szbhInitData = await loadCommentsSZBH(info, NiconicoApi)
     initData.push(...szbhInitData)
   }
 
@@ -78,11 +79,12 @@ export const loadComments = async (
  */
 export const loadCommentsNormal = async (
   info: Parameters<typeof getSearchData>[0],
+  niconicoApi: typeof NiconicoApi
 ): Promise<InitData[]> => {
   console.log('[NCOverlay] loadCommentsNormal()')
 
   // 検索結果
-  const searchData = await getSearchData(info)
+  const searchData = await getSearchData(info, niconicoApi)
   if (!searchData) return []
 
   const videoIds = {
@@ -95,14 +97,14 @@ export const loadCommentsNormal = async (
   }
 
   // 動画情報
-  const videoData = await getVideoData(videoIds)
+  const videoData = await getVideoData(videoIds, niconicoApi)
   if (!videoData) return []
 
   videoData.normal = filterVideoData(videoData.normal)
   videoData.splited = filterVideoData(videoData.splited, { anime: true })
 
   // コメント情報
-  const threadsData = await getThreadsData(videoData)
+  const threadsData = await getThreadsData(videoData, niconicoApi)
   if (!threadsData) return []
 
   const videoDataValues = Object.values(videoData).flat()
@@ -149,6 +151,7 @@ export const loadCommentsNormal = async (
  */
 export const loadCommentsSZBH = async (
   info: Parameters<typeof getSearchData>[0],
+  niconicoApi: typeof NiconicoApi
 ): Promise<InitData[]> => {
   console.log('[NCOverlay] loadCommentsSZBH()')
 
@@ -163,7 +166,7 @@ export const loadCommentsSZBH = async (
   info.strictMatch = false
 
   // 検索結果
-  const searchData = await getSearchData(info)
+  const searchData = await getSearchData(info, niconicoApi)
   if (!searchData) return []
 
   const videoIds = {
@@ -180,13 +183,13 @@ export const loadCommentsSZBH = async (
   }
 
   // 動画情報
-  const videoData = await getVideoData(videoIds)
+  const videoData = await getVideoData(videoIds, niconicoApi)
   if (!videoData) return []
 
   videoData.normal = filterVideoData(videoData.normal)
 
   // コメント情報
-  const threadsData = await getThreadsData(videoData)
+  const threadsData = await getThreadsData(videoData, niconicoApi)
   if (!threadsData) return []
 
   const videoDataValues = Object.values(videoData).flat()

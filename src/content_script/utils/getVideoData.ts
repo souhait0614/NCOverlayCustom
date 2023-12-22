@@ -13,7 +13,7 @@ const filterVideoData = (videoData: VideoData[]) => {
 export const getVideoData = async (ids: {
   normal?: string[]
   splited?: string[]
-}): Promise<{
+},niconicoApi: typeof NiconicoApi): Promise<{
   normal: VideoData[]
   splited: VideoData[]
 } | null> => {
@@ -28,7 +28,7 @@ export const getVideoData = async (ids: {
     const videoData: VideoData[] = []
 
     for (const id of ids.normal) {
-      const res = await NiconicoApi.video([id])
+      const res = await niconicoApi.video([id])
 
       if (res) {
         videoData.push(res)
@@ -39,7 +39,7 @@ export const getVideoData = async (ids: {
 
     if (videoData.length === 0) {
       for (const id of ids.normal) {
-        const res = await NiconicoApi.video([id, true])
+        const res = await niconicoApi.video([id, true])
 
         if (res) {
           videoData.push(res)
@@ -61,7 +61,7 @@ export const getVideoData = async (ids: {
     const videoData: VideoData[] = []
 
     for (const id of ids.splited) {
-      const res = await NiconicoApi.video([id])
+      const res = await niconicoApi.video([id])
 
       if (res) {
         videoData.push(res)

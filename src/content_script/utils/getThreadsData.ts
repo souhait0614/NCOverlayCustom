@@ -71,7 +71,7 @@ const filterThreadsData = (
 export const getThreadsData = async (videoData: {
   normal?: VideoData[]
   splited?: VideoData[]
-}): Promise<{
+}, niconicoApi: typeof NiconicoApi): Promise<{
   [videoId: string]: ThreadsData
 } | null> => {
   const settings = await WebExtStorageApi.getSettings()
@@ -85,7 +85,7 @@ export const getThreadsData = async (videoData: {
   // 通常の動画
   if (0 < videoData.normal.length) {
     for (const data of videoData.normal) {
-      const res = await NiconicoApi.threads([
+      const res = await niconicoApi.threads([
         filterNvComment(data.comment.nvComment),
         data.comment.nvComment.server,
       ])
@@ -106,7 +106,7 @@ export const getThreadsData = async (videoData: {
     let tmpOffset = 0
 
     for (const data of videoData.splited) {
-      const res = await NiconicoApi.threads([
+      const res = await niconicoApi.threads([
         filterNvComment(data.comment.nvComment),
         data.comment.nvComment.server,
       ])
