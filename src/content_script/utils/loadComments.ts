@@ -76,8 +76,8 @@ export const loadComments = async (
 /**
  * 通常のコメントを読み込み
  */
-const loadCommentsNormal = async (
-  info: Parameters<typeof getSearchData>[0]
+export const loadCommentsNormal = async (
+  info: Parameters<typeof getSearchData>[0],
 ): Promise<InitData[]> => {
   console.log('[NCOverlay] loadCommentsNormal()')
 
@@ -147,8 +147,8 @@ const loadCommentsNormal = async (
 /**
  * コメント専用動画のコメントを読み込み
  */
-const loadCommentsSZBH = async (
-  info: Parameters<typeof getSearchData>[0]
+export const loadCommentsSZBH = async (
+  info: Parameters<typeof getSearchData>[0],
 ): Promise<InitData[]> => {
   console.log('[NCOverlay] loadCommentsSZBH()')
 
