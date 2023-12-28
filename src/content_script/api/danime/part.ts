@@ -1,5 +1,6 @@
 import type { Part, PartData } from '@/types/danime/part'
 import { DANIME_PART_API } from '@/constants'
+import { Logger } from '@/utils/logger'
 
 export const part = async (partId: string): Promise<PartData | null> => {
   try {
@@ -18,7 +19,7 @@ export const part = async (partId: string): Promise<PartData | null> => {
       }
     }
   } catch (e) {
-    console.error('[NCOverlay] Error', e)
+    Logger.error('Error', e)
   }
 
   return null

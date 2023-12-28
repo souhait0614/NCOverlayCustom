@@ -1,5 +1,6 @@
 import type { DmcVideo, Video } from '@/types/disneyPlus/dmcVideo'
 import { DISNEYPLUS_DMCVIDEO_API } from '@/constants'
+import { Logger } from '@/utils/logger'
 
 export const dmcVideo = async (contentId: string): Promise<Video | null> => {
   try {
@@ -13,7 +14,7 @@ export const dmcVideo = async (contentId: string): Promise<Video | null> => {
       }
     }
   } catch (e) {
-    console.error('[NCOverlay] Error', e)
+    Logger.error('Error', e)
   }
 
   return null

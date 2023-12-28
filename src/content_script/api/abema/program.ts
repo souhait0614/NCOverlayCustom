@@ -1,5 +1,6 @@
 import type { Program } from '@/types/abema/program'
 import { ABEMA_PROGRAMS_API } from '@/constants'
+import { Logger } from '@/utils/logger'
 
 export const program = async (id: string) => {
   const token = localStorage.getItem('abm_token')
@@ -26,7 +27,7 @@ export const program = async (id: string) => {
         }
       }
     } catch (e) {
-      console.error('[NCOverlay] Error', e)
+      Logger.error('Error', e)
     }
   }
 
