@@ -1,5 +1,6 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
+import { Logger } from '@/utils/logger'
 
 export default async () => {
   const video = document.querySelector<HTMLVideoElement>(
@@ -35,12 +36,12 @@ export default async () => {
 
     const info = getInfo()
 
-    console.log('[NCOverlay] info', info)
+    Logger.info('info', info)
 
     if (info.title && info.episode) {
       const title = `${info.title} ${info.episode}`
 
-      console.log('[NCOverlay] title', title)
+      Logger.info('title', title)
 
       await loadComments(this, {
         title: title,

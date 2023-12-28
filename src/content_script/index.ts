@@ -3,10 +3,11 @@ import webext from '@/webext'
 import { checkSupportedVod } from '@/content_script/utils/checkSupportedVod'
 import { setAction } from './utils/setAction'
 import { setSidePanel } from './utils/setSidePanel'
+import { Logger } from '@/utils/logger'
 
-console.log('[NCOverlay] content_script.js')
+Logger.info('content_script.js')
 
-webext.runtime.onMessage.addListener(() => {})
+webext.runtime.onMessage.addListener(() => { })
 
 const vodFunc: {
   [key in keyof typeof VODS]: Promise<{ default: () => Promise<void> }>
@@ -28,7 +29,7 @@ const main = async () => {
 
   if (!vod) return
 
-  console.log(`[NCOverlay] VOD: ${VODS[vod]}`)
+  Logger.info(`VOD: ${VODS[vod]}`)
 
   document.documentElement.classList.add('NCOverlay')
   document.documentElement.dataset.ncoVod = vod

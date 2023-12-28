@@ -1,6 +1,7 @@
 import type { NvComment } from '@/types/niconico/video'
 import type { Threads, ThreadsData } from '@/types/niconico/threads'
 import { NICONICO_THREADS_API } from '@/constants'
+import { Logger } from '@/utils/logger'
 
 export type NvCommentBody = Omit<NvComment, 'server'> & {
   additionals: { when?: number }
@@ -28,10 +29,10 @@ export const threads = async (
     if (res.ok) {
       return json.data
     } else {
-      console.log('[NCOverlay] Error', json)
+      Logger.info('Error', json)
     }
   } catch (e) {
-    console.log('[NCOverlay] Error', e)
+    Logger.info('Error', e)
   }
 
   return null

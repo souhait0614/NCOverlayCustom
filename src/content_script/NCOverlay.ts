@@ -15,6 +15,7 @@ import { setActionBadge } from './utils/setActionBadge'
 import { setActionTitle } from './utils/setActionTitle'
 import { sendToPopup } from './utils/sendToPopup'
 import { sendToSidePanel } from './utils/sendToSidePanel'
+import { Logger } from '@/utils/logger'
 
 export type InitData = {
   videoData: VideoData
@@ -49,7 +50,7 @@ export class NCOverlay {
   }
 
   constructor(video: HTMLVideoElement, initData: InitData[] = []) {
-    console.log('[NCOverlay] NCOverlay.video', video)
+    Logger.info('NCOverlay.video', video)
 
     // Videoにイベント追加
     this.#video = video
@@ -73,7 +74,7 @@ export class NCOverlay {
 
     // メタデータを既に持っていた場合
     if (HTMLMediaElement.HAVE_METADATA <= this.#video.readyState) {
-      console.log('[NCOverlay] video.readyState >= HAVE_METADATA')
+      Logger.info('video.readyState >= HAVE_METADATA')
 
       window.setTimeout(() => {
         this.#listener.loadedmetadata(new Event('loadedmetadata'))
@@ -100,11 +101,11 @@ export class NCOverlay {
       // this.setFPS(settings.lowPerformance ? 30 : 60)
     }, 0)
 
-    console.log('[NCOverlay] new NCOverlay()', this)
+    Logger.info('new NCOverlay()', this)
   }
 
   init(initData?: InitData[]) {
-    console.log('[NCOverlay] NCOverlay.init()', initData)
+    Logger.info('NCOverlay.init()', initData)
 
     sendToPopup(null)
     sendToSidePanel(null)
@@ -135,13 +136,13 @@ export class NCOverlay {
         kawaiiCount += comments.filter((v) => KAWAII_REGEXP.test(v.body)).length
       }
 
-      console.log('[NCOverlay] commentsCount', this.#commentsCount)
-      console.log('[NCOverlay] kawaiiCount', kawaiiCount)
+      Logger.info('commentsCount', this.#commentsCount)
+      Logger.info('kawaiiCount', kawaiiCount)
 
       this.#kawaiiPct =
         Math.round((kawaiiCount / this.#commentsCount) * 100 * 10) / 10
 
-      console.log(`[NCOverlay] kawaiiPct: ${this.#kawaiiPct}%`)
+      Logger.info(`kawaiiPct: ${this.#kawaiiPct}%`)
     }
 
     this.#niconiComments = new NiconiComments(
@@ -166,8 +167,7 @@ export class NCOverlay {
           : this.#commentsCount.toString()
       )
       setActionTitle(
-        `${this.#commentsCount.toLocaleString()}件のコメント (かわいい率: ${
-          this.#kawaiiPct
+        `${this.#commentsCount.toLocaleString()}件のコメント (かわいい率: ${this.#kawaiiPct
         }%)`
       )
     } else {
@@ -186,7 +186,7 @@ export class NCOverlay {
   }
 
   dispose() {
-    console.log('[NCOverlay] NCOverlay.dispose()')
+    Logger.info('NCOverlay.dispose()')
 
     webext.storage.local.onChanged.removeListener(
       this.#listener.storageOnChanged
@@ -222,7 +222,7 @@ export class NCOverlay {
   }
 
   add(initData: InitData[]) {
-    console.log('[NCOverlay] NCOverlay.add()', initData)
+    Logger.info('NCOverlay.add()', initData)
 
     if (0 < initData.length) {
       this.#initData = [...this.#initData, ...initData].filter(
@@ -241,7 +241,7 @@ export class NCOverlay {
   }
 
   remove(...videoIds: string[]) {
-    console.log('[NCOverlay] NCOverlay.remove()', videoIds)
+    Logger.info('NCOverlay.remove()', videoIds)
 
     if (0 < videoIds.length) {
       this.#initData = this.#initData.filter(
@@ -320,7 +320,7 @@ export class NCOverlay {
 
   #listener = {
     playing: (e: Event) => {
-      console.log('[NCOverlay] Event: playing')
+      Logger.info('Event: playing')
 
       this.start()
 
@@ -328,7 +328,7 @@ export class NCOverlay {
     },
 
     pause: (e: Event) => {
-      console.log('[NCOverlay] Event: pause')
+      Logger.info('Event: pause')
 
       this.stop()
 
@@ -336,7 +336,7 @@ export class NCOverlay {
     },
 
     seeked: (e: Event) => {
-      console.log('[NCOverlay] Event: seeked', this.#video.currentTime)
+      Logger.info('Event: seeked', this.#video.currentTime)
 
       this.#render()
 
@@ -348,7 +348,7 @@ export class NCOverlay {
     },
 
     loadedmetadata: (e: Event) => {
-      console.log('[NCOverlay] Event: loadedmetadata')
+      Logger.info('Event: loadedmetadata')
 
       this.onLoadedmetadata?.(e)
     },

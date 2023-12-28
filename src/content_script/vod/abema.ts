@@ -1,6 +1,7 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
 import { AbemaApi } from '@/content_script/api/abema'
+import { Logger } from '@/utils/logger'
 
 export default async () => {
   let nco: NCOverlay | null = null
@@ -10,7 +11,7 @@ export default async () => {
 
     const program = id && (await AbemaApi.program(id))
 
-    console.log('[NCOverlay] AbemaApi.program', program)
+    Logger.info('AbemaApi.program', program)
 
     if (program) {
       const isAnime = program.genre.id === 'animation'
@@ -48,7 +49,7 @@ export default async () => {
   }
 
   const modify = (video: HTMLVideoElement) => {
-    console.log('[NCOverlay] modify()')
+    Logger.info('modify()')
 
     const player = video.closest<HTMLElement>('.com-vod-VODScreen__player')
 
@@ -60,7 +61,7 @@ export default async () => {
 
         const info = await getInfo()
 
-        console.log('[NCOverlay] info', info)
+        Logger.info('info', info)
 
         if (info) {
           const words: string[] = [info.title]
@@ -70,7 +71,7 @@ export default async () => {
 
           const title = words.join(' ')
 
-          console.log('[NCOverlay] title', title)
+          Logger.info('title', title)
 
           await loadComments(this, {
             title: title,

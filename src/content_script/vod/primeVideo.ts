@@ -3,6 +3,7 @@ import { loadComments } from '@/content_script/utils/loadComments'
 import { isVisible } from '@/utils/dom'
 import { querySelectorAsync } from '@/utils/dom/querySelectorAsync'
 import { formatedToSeconds } from '@/utils/formatedToSeconds'
+import { Logger } from '@/utils/logger'
 
 export default async () => {
   let nco: NCOverlay | null = null
@@ -33,7 +34,7 @@ export default async () => {
   const getInfo = async () => {
     const detail = getDetail()
 
-    console.log('[NCOverlay] detail', detail)
+    Logger.info('detail', detail)
 
     const titleElem = document.querySelector<HTMLElement>(
       '.atvwebplayersdk-title-text'
@@ -69,7 +70,7 @@ export default async () => {
   }
 
   const modify = (video: HTMLVideoElement) => {
-    console.log('[NCOverlay] modify()')
+    Logger.info('modify()')
 
     const playerUIContainer = video
       .closest<HTMLElement>('.webPlayerSDKContainer')
@@ -83,7 +84,7 @@ export default async () => {
 
         const info = await getInfo()
 
-        console.log('[NCOverlay] info', info)
+        Logger.info('info', info)
 
         if (info.title) {
           const words: string[] = [info.title]
@@ -93,7 +94,7 @@ export default async () => {
 
           const title = words.join(' ')
 
-          console.log('[NCOverlay] title', title)
+          Logger.info('title', title)
 
           await loadComments(this, {
             title: title,

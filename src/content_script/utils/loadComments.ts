@@ -7,6 +7,7 @@ import { getSearchData } from './getSearchData'
 import { getVideoData } from './getVideoData'
 import { getThreadsData } from './getThreadsData'
 import { NiconicoApi } from '../api/niconico'
+import { Logger } from '@/utils/logger'
 
 // const SZBH_USER_IDS = [289866]
 
@@ -82,7 +83,7 @@ export const loadCommentsNormal = async (
   niconicoApi: typeof NiconicoApi,
   useNgList: boolean
 ): Promise<InitData[]> => {
-  console.log('[NCOverlay] loadCommentsNormal()')
+  Logger.info('loadCommentsNormal()')
 
   // 検索結果
   const searchData = await getSearchData(info, niconicoApi)
@@ -155,7 +156,7 @@ export const loadCommentsSZBH = async (
   niconicoApi: typeof NiconicoApi,
   useNgList: boolean
 ): Promise<InitData[]> => {
-  console.log('[NCOverlay] loadCommentsSZBH()')
+  Logger.info('loadCommentsSZBH()')
 
   info.durationDiff = 65
   info.filters = {

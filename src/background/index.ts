@@ -14,8 +14,9 @@ import { getSupportStatus } from '@/utils/webext/getSupportStatus'
 import { getCurrentTab } from '@/utils/webext/getCurrentTab'
 import { getFormsUrl } from '@/utils/getFormsUrl'
 import { NiconicoApi } from './api/niconico'
+import { Logger } from '@/utils/logger'
 
-console.log('[NCOverlay] background.js')
+Logger.info('background.js')
 
 const manifest = webext.runtime.getManifest()
 
@@ -131,7 +132,7 @@ webext.runtime.onInstalled.addListener(async (details) => {
                 return val.matches.map((val) => {
                   try {
                     return new URL(val).hostname
-                  } catch {}
+                  } catch { }
                 })
               })
               .includes(new URL(tab?.url ?? '').hostname)
@@ -139,7 +140,7 @@ webext.runtime.onInstalled.addListener(async (details) => {
             if (isContentScriptTarget) {
               webext.tabs.reload(tab!.id)
             }
-          } catch {}
+          } catch { }
         }
       }
 
@@ -233,7 +234,7 @@ webext.runtime.onMessage.addListener(
           })
         })
         .catch((e) => {
-          console.log('[NCOverlay] Error', e)
+          Logger.info('Error', e)
 
           sendResponse({
             type: message.type,
@@ -290,7 +291,7 @@ webext.tabs.onUpdated.addListener(async (tabId, info, tab) => {
       }
 
       prevHostnames[tabId] = hostname
-    } catch {}
+    } catch { }
 
     await setSidePanel(true, tabId)
   } else {

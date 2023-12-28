@@ -1,6 +1,7 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
 import { DAnimeApi } from '@/content_script/api/danime'
+import { Logger } from '@/utils/logger'
 
 export default async () => {
   const video = document.querySelector<HTMLVideoElement>('video#video')
@@ -18,10 +19,10 @@ export default async () => {
 
     const partData = await DAnimeApi.part(partId)
 
-    console.log('[NCOverlay] DAnimeApi.part', partData)
+    Logger.info('DAnimeApi.part', partData)
 
     if (partData) {
-      console.log('[NCOverlay] title', partData.title)
+      Logger.info('title', partData.title)
 
       await loadComments(this, {
         title: partData.title,

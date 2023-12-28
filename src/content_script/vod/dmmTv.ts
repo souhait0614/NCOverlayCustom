@@ -1,6 +1,7 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
 import { DmmTvApi } from '@/content_script/api/dmmTv'
+import { Logger } from '@/utils/logger'
 
 export default async () => {
   let nco: NCOverlay | null = null
@@ -18,7 +19,7 @@ export default async () => {
         contentId: contentId,
       }))
 
-    console.log('[NCOverlay] DmmTvApi.video', dataVideo)
+    Logger.info('DmmTvApi.video', dataVideo)
 
     if (dataVideo) {
       // 15: アニメ, 17: 特撮
@@ -44,7 +45,7 @@ export default async () => {
   }
 
   const modify = (video: HTMLVideoElement) => {
-    console.log('[NCOverlay] modify()')
+    Logger.info('modify()')
 
     nco = new NCOverlay(video)
 
@@ -53,7 +54,7 @@ export default async () => {
 
       const info = await getInfo()
 
-      console.log('[NCOverlay] info', info)
+      Logger.info('info', info)
 
       if (info) {
         const words: string[] = [info.title]
@@ -66,7 +67,7 @@ export default async () => {
 
         const title = words.join(' ')
 
-        console.log('[NCOverlay] title', title)
+        Logger.info('title', title)
 
         await loadComments(this, {
           title: title,

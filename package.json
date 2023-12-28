@@ -17,6 +17,7 @@
     "@types/chrome": "^0.0.246",
     "@types/clean-css": "^4.2.11",
     "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.10.5",
     "@types/webextension-polyfill": "^0.10.7",
     "archiver": "^6.0.1",
     "clean-css": "^5.3.3",

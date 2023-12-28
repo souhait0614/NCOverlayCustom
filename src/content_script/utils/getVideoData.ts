@@ -1,5 +1,6 @@
 import type { VideoData } from '@/types/niconico/video'
 import { NiconicoApi } from '@/content_script/api/niconico'
+import { Logger } from '@/utils/logger'
 
 const filterVideoData = (videoData: VideoData[]) => {
   return videoData.filter((val, idx, ary) => {
@@ -13,7 +14,7 @@ const filterVideoData = (videoData: VideoData[]) => {
 export const getVideoData = async (ids: {
   normal?: string[]
   splited?: string[]
-},niconicoApi: typeof NiconicoApi): Promise<{
+}, niconicoApi: typeof NiconicoApi): Promise<{
   normal: VideoData[]
   splited: VideoData[]
 } | null> => {
@@ -35,7 +36,7 @@ export const getVideoData = async (ids: {
       }
     }
 
-    console.log('[NCOverlay] videoData', videoData)
+    Logger.info('videoData', videoData)
 
     if (videoData.length === 0) {
       for (const id of ids.normal) {
@@ -46,7 +47,7 @@ export const getVideoData = async (ids: {
         }
       }
 
-      console.log('[NCOverlay] videoData (guest)', videoData)
+      Logger.info('videoData (guest)', videoData)
     }
 
     for (const data of videoData) {
@@ -68,7 +69,7 @@ export const getVideoData = async (ids: {
       }
     }
 
-    console.log('[NCOverlay] videoData (splited)', videoData)
+    Logger.info('videoData (splited)', videoData)
 
     for (const data of videoData) {
       data._nco_extra_info = { type: 'splited' }

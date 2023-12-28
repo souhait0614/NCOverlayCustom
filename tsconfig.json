@@ -8,10 +8,15 @@
     "resolveJsonModule": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
-    "types": ["chrome"],
+    "types": [
+      "chrome",
+      "node"
+    ],
     "composite": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   }
 }

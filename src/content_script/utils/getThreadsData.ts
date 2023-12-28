@@ -2,6 +2,7 @@ import type { VideoData } from '@/types/niconico/video'
 import type { ThreadsData } from '@/types/niconico/threads'
 import { NiconicoApi } from '@/content_script/api/niconico'
 import { WebExtStorageApi } from '@/utils/webext/storage'
+import { Logger } from '@/utils/logger'
 
 const filterNvComment = (
   nvComment: VideoData['comment']['nvComment']
@@ -61,7 +62,7 @@ const filterThreadsData = (
         })
       }
 
-      console.log('[NCOverlay] ngComments', { ngComments })
+      Logger.info('ngComments', { ngComments })
     }
   }
 
@@ -96,7 +97,7 @@ export const getThreadsData = async (videoData: {
       }
     }
 
-    console.log('[NCOverlay] threadsData', threadsDataNormal)
+    Logger.info('threadsData', threadsDataNormal)
   }
 
   // 分割されている動画
@@ -130,7 +131,7 @@ export const getThreadsData = async (videoData: {
       }
     }
 
-    console.log('[NCOverlay] threadsData (splited)', threadsDataSplited)
+    Logger.info('threadsData (splited)', threadsDataSplited)
   }
 
   if (

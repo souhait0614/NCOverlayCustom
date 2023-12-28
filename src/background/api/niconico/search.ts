@@ -1,6 +1,7 @@
 import type { SearchQuery, Search, SearchData } from '@/types/niconico/search'
 import { NICONICO_SEARCH_API } from '@/constants'
 import { filterObject } from '@/utils/filterObject'
+import { Logger } from '@/utils/logger'
 
 export const search = async (
   query: SearchQuery
@@ -47,10 +48,10 @@ export const search = async (
     if (res.ok) {
       return json.data
     } else {
-      console.log('[NCOverlay] Error', json)
+      Logger.info('Error', json)
     }
   } catch (e) {
-    console.log('[NCOverlay] Error', e)
+    Logger.info('Error', e)
   }
 
   return null

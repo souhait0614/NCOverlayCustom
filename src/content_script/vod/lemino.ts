@@ -1,5 +1,6 @@
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
+import { Logger } from '@/utils/logger'
 
 export default async () => {
   let nco: NCOverlay | null = null
@@ -33,7 +34,7 @@ export default async () => {
   }
 
   const modify = (video: HTMLVideoElement) => {
-    console.log('[NCOverlay] modify()')
+    Logger.info('modify()')
 
     nco = new NCOverlay(video)
 
@@ -42,7 +43,7 @@ export default async () => {
 
       const info = getInfo()
 
-      console.log('[NCOverlay] info', info)
+      Logger.info('info', info)
 
       if (info) {
         const words: string[] = []
@@ -56,7 +57,7 @@ export default async () => {
         if (0 < words.length) {
           const title = words.join(' ')
 
-          console.log('[NCOverlay] title', title)
+          Logger.info('title', title)
 
           await loadComments(this, {
             title: title,

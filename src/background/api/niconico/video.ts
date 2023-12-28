@@ -1,5 +1,6 @@
 import type { Video, VideoData } from '@/types/niconico/video'
 import { NICONICO_VIDEO_API, NICONICO_VIDEO_GUEST_API } from '@/constants'
+import { Logger } from '@/utils/logger'
 
 const generateRandomStr = (len: number) => {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -24,9 +25,8 @@ export const video = async (
       t: now,
     }
 
-    const url = `${
-      guest ? NICONICO_VIDEO_GUEST_API : NICONICO_VIDEO_API
-    }/${id}?${new URLSearchParams(params)}`
+    const url = `${guest ? NICONICO_VIDEO_GUEST_API : NICONICO_VIDEO_API
+      }/${id}?${new URLSearchParams(params)}`
 
     try {
       const res = await fetch(url, {
@@ -37,10 +37,10 @@ export const video = async (
       if (res.ok) {
         return json.data
       } else {
-        console.log('[NCOverlay] Error', json)
+        Logger.info('Error', json)
       }
     } catch (e) {
-      console.log('[NCOverlay] Error', e)
+      Logger.info('Error', e)
     }
   }
 

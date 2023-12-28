@@ -9,8 +9,9 @@ import { getFromPage } from '@/utils/webext/getFromPage'
 import { removeChilds } from '@/utils/dom'
 import { getFormsUrl } from '@/utils/getFormsUrl'
 import { createVideoItem } from './utils/createVideoItem'
+import { Logger } from '@/utils/logger'
 
-console.log('[NCOverlay] popup.html')
+Logger.info('popup.html')
 
 // const manifest = webext.runtime.getManifest()
 
@@ -225,7 +226,7 @@ const main = async () => {
 
   const res = await getFromPage()
 
-  console.log('[NCOverlay] getFromPage()', res)
+  Logger.info('getFromPage()', res)
 
   if (res) {
     update(res.result)

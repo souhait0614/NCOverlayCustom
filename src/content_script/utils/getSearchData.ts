@@ -4,6 +4,7 @@ import deepmerge from 'deepmerge'
 import { NiconicoApi } from '@/content_script/api/niconico'
 import { Parser } from '@/utils/parser'
 import { Optimizer } from '@/utils/optimizer'
+import { Logger } from '@/utils/logger'
 
 const searchQueryBase: Partial<SearchQuery> = {
   targets: ['title'],
@@ -46,11 +47,11 @@ export const getSearchData = async (info: {
     }
   }
 
-  console.log('[NCOverlay] parseResult', parseResult)
+  Logger.info('parseResult', parseResult)
 
   const optimizedTitle = Optimizer.search(parseResult, info.strictMatch)
 
-  console.log(`[NCOverlay] optimizedTitle: ${optimizedTitle}`)
+  Logger.info(`optimizedTitle: ${optimizedTitle}`)
 
   const searchDataNormal: SearchData[] = []
   const searchDataSplited: SearchData[] = []
@@ -71,7 +72,7 @@ export const getSearchData = async (info: {
     }),
   ])
 
-  console.log('[NCOverlay] searchData', searchNormal)
+  Logger.info('searchData', searchNormal)
 
   if (searchNormal) {
     const filtered = searchNormal.filter((val) => {
@@ -83,7 +84,7 @@ export const getSearchData = async (info: {
       )
     })
 
-    console.log('[NCOverlay] searchData (filtered)', filtered)
+    Logger.info('searchData (filtered)', filtered)
 
     searchDataNormal.push(...filtered)
   }
@@ -106,7 +107,7 @@ export const getSearchData = async (info: {
       }),
     ])
 
-    console.log('[NCOverlay] searchData (splited)', searchSplited)
+    Logger.info('searchData (splited)', searchSplited)
 
     if (searchSplited) {
       const chapterRegExp = /Chapter\.(\d)+/i
@@ -143,19 +144,19 @@ export const getSearchData = async (info: {
           .map((v) => v.lengthSeconds!)
           .reduce((s, v) => s + v, 0)
 
-        console.log('[NCOverlay] duration', info.duration)
-        console.log('[NCOverlay] duration (splited)', totalDuration)
+        Logger.info('duration', info.duration)
+        Logger.info('duration (splited)', totalDuration)
 
         if (
           totalDuration - 5 <= info.duration &&
           info.duration <= totalDuration + 5
         ) {
-          console.log('[NCOverlay] searchData (splited, filtered)', filtered)
+          Logger.info('searchData (splited, filtered)', filtered)
 
           searchDataSplited.push(...filtered)
         }
       } else {
-        console.log('[NCOverlay] Error: Chapterが連続していません', filtered)
+        Logger.info('Error: Chapterが連続していません', filtered)
       }
     }
   }

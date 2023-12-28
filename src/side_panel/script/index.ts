@@ -9,8 +9,9 @@ import { WebExtStorageApi } from '@/utils/webext/storage'
 import { getFromPage } from '@/utils/webext/getFromPage'
 import { removeChilds } from '@/utils/dom'
 import { createCommentItem } from './utils/createCommentItem'
+import { Logger } from '@/utils/logger'
 
-console.log('[NCOverlay] side_panel.html')
+Logger.info('side_panel.html')
 
 let settings: WebExtStorageSettings
 let timeIdxPairs: number[][] = []
@@ -104,7 +105,7 @@ const main = async () => {
 
   const res = await getFromPage()
 
-  console.log('[NCOverlay] getFromPage()', res)
+  Logger.info('getFromPage()', res)
 
   if (res) {
     update(res.result)
