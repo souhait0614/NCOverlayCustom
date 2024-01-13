@@ -1,14 +1,40 @@
 import type { V1Comment } from '@xpadev-net/niconicomments'
-import { COLOR_COMMANDS, COLOR_COMMANDS_DARKER } from '@/constants'
+import { COLOR_COMMANDS } from '@/constants'
 import { formatDuration } from '@/utils/formatDuration'
 import { formatDate } from '@/utils/formatDate'
+import { hexToRGB } from '@/utils/hexToRGB'
 
 const template = document.querySelector<HTMLTemplateElement>(
   '#TemplateItemComment'
 )!.content
 
+const itemMouseEnterHandler: (this: HTMLElement, ev: MouseEvent) => any =
+  function () {
+    const items = this.parentElement?.querySelectorAll<HTMLElement>(
+      `.item[data-user-id="${this.dataset.userId}"]`
+    )
+    if (items) {
+      ;[...items].forEach((val) => val.classList.add('hover'))
+    }
+  }
+
+const itemMouseLeaveHandler: (this: HTMLElement, ev: MouseEvent) => any =
+  function () {
+    const items = this.parentElement?.querySelectorAll<HTMLElement>(
+      `.item[data-user-id="${this.dataset.userId}"]`
+    )
+    if (items) {
+      ;[...items].forEach((val) => val.classList.remove('hover'))
+    }
+  }
+
 export const createCommentItem = (comment: V1Comment) => {
   const item = template.firstElementChild!.cloneNode(true) as HTMLElement
+
+  item.dataset.userId = comment.userId
+
+  item.addEventListener('mouseenter', itemMouseEnterHandler)
+  item.addEventListener('mouseleave', itemMouseLeaveHandler)
 
   const [
     commentText,
@@ -26,17 +52,22 @@ export const createCommentItem = (comment: V1Comment) => {
   for (const command of comment.commands) {
     if (['white'].includes(command)) continue
 
-    if (command in COLOR_COMMANDS) {
-      commentTextSpan.classList.add('command-color')
+    // カラー
+    if (command in COLOR_COMMANDS || /^#[a-fA-F0-9]{6}$/.test(command)) {
+      const hex: string = COLOR_COMMANDS[command] ?? command
+      const rgb = hexToRGB(hex)
+      const brightness =
+        rgb && Math.round((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000)
 
-      commentTextSpan.style.backgroundColor = COLOR_COMMANDS[command]
+      if (brightness !== null) {
+        commentTextSpan.classList.add('command-color')
 
-      if (COLOR_COMMANDS_DARKER.includes(command)) {
-        commentText.style.color = '#fff'
+        commentTextSpan.style.backgroundColor = hex
+        commentText.style.color = brightness > 125 ? 'black' : 'white'
       }
     }
-
-    if (['mincho', 'small', 'big'].includes(command)) {
+    // その他
+    else if (['mincho', 'small', 'big'].includes(command)) {
       commentTextSpan.classList.add(`command-${command}`)
     }
   }
