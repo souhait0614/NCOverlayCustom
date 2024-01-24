@@ -4,9 +4,9 @@
     "check": "tsc -noEmit",
     "build": "pnpm run check && node build.mjs",
     "build:test": "esbuild src/_test.ts --bundle --outdir=dist",
-    "upload": "node upload.mjs --chrome --firefox",
-    "upload:chrome": "node upload.mjs --chrome",
-    "upload:firefox": "node upload.mjs --firefox"
+    "upload": "pnpm run build && node upload.mjs --chrome --firefox",
+    "upload:chrome": "pnpm run build && node upload.mjs --chrome",
+    "upload:firefox": "pnpm run build && node upload.mjs --firefox"
   },
   "author": "Midra",
   "license": "MIT",
@@ -27,13 +27,14 @@
     "@types/webextension-polyfill": "^0.10.7",
     "archiver": "^6.0.1",
     "clean-css": "^5.3.3",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.3.2",
     "esbuild": "^0.19.11",
     "fs-extra": "^11.2.0",
     "glob": "^10.3.10",
     "html-minifier-terser": "^7.2.0",
-    "sass": "^1.69.7",
-    "terser": "^5.26.0",
+    "open": "^10.0.3",
+    "sass": "^1.70.0",
+    "terser": "^5.27.0",
     "typescript": "^5.3.3"
   }
 }

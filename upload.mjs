@@ -2,6 +2,7 @@
 import { globSync } from 'glob'
 import fs from 'fs-extra'
 import archiver from 'archiver'
+import open from 'open'
 import { ChromeWebstoreAPI } from '@plasmohq/chrome-webstore-api'
 import { MozillaAddonsAPI } from '@plasmohq/mozilla-addons-api'
 
@@ -40,15 +41,16 @@ if (chromeExtPath) {
     refreshToken: process.env.CWS_REFRESH_TOKEN ?? '',
   })
 
-  const zipFile = fs.createReadStream(chromeExtPath)
+  try {
+    // 拡張機能をアップロード & 提出
+    const result = await client.submit({
+      filePath: chromeExtPath,
+    })
 
-  client.upload({ readStream: zipFile }).then((val) => {
-    if (val.uploadState === 'FAILURE' || val.uploadState === 'NOT_FOUND') {
-      console.error(val)
-    } else {
-      console.log('Uploaded. (Chrome Web Store)', val)
-    }
-  })
+    console.log('[Chrome Web Store]', result)
+  } catch (e) {
+    console.error('[Chrome Web Store]', e)
+  }
 }
 
 /**
@@ -59,16 +61,32 @@ if (firefoxExtPath) {
     extId: process.env.AMO_EXTENSION_ID ?? '',
     apiKey: process.env.AMO_API_KEY ?? '',
     apiSecret: process.env.AMO_API_SECRET ?? '',
+    license: process.env.WEBEXT_LICENSE,
   })
 
-  // 拡張機能のファイルをアップロード
-  const uploadResponse = await client.uploadFile({
-    filePath: firefoxExtPath,
-  })
+  try {
+    // 拡張機能をアップロード
+    const uploadResponse = await client.uploadFile({
+      filePath: firefoxExtPath,
+    })
 
-  // ソースコードをZIPに圧縮
-  const tmpSourcePath = `../tmp-${crypto.randomUUID()}`
-  const sourceZipPath = `${tmpSourcePath}.zip`
+    // バージョンを作成
+    const versionResponse = await client.createVersion({
+      uploadUuid: uploadResponse.uuid,
+      version: uploadResponse.version,
+    })
+
+    // バージョン管理ページを開く
+    open(versionResponse.edit_url)
+
+    console.log('[Firefox Add-ons]', versionResponse)
+  } catch (e) {
+    console.error('[Firefox Add-ons]', e)
+  }
+
+  // ソースコードをZIPに圧縮 (dist/source.zip)
+  const tmpSourcePath = `../source-${crypto.randomUUID()}`
+  const sourceZipPath = `./dist/source.zip`
 
   fs.copySync('./', tmpSourcePath)
   fs.removeSync(`${tmpSourcePath}/node_modules`)
@@ -80,32 +98,4 @@ if (firefoxExtPath) {
   })
 
   fs.removeSync(tmpSourcePath)
-
-  try {
-    // ソースコードをアップロード
-    const formData = new FormData()
-    formData.append('source', new Blob([fs.readFileSync(sourceZipPath)]))
-    formData.append('upload', uploadResponse.uuid)
-
-    await fetch(new URL('/versions/', client.productEndpoint), {
-      method: 'POST',
-      headers: {
-        'Authorization': `JWT ${await client.getAccessToken()}`,
-        'Content-Type': 'multipart/form-data',
-      },
-      body: formData,
-    })
-
-    // バージョンを作成
-    const versionResponse = await client.createVersion({
-      uploadUuid: uploadResponse.uuid,
-      version: uploadResponse.version,
-    })
-
-    console.log('Uploaded. (Firefox Add-ons)', versionResponse)
-  } catch (e) {
-    console.error(e)
-  }
-
-  fs.removeSync(sourceZipPath)
 }
