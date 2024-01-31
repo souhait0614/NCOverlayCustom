@@ -1,9 +1,13 @@
+import webext from '@/webext'
 import { NCOverlay } from '@/content_script/NCOverlay'
 import { loadComments } from '@/content_script/utils/loadComments'
+import { injectScript } from '@/content_script/utils/injectScript'
 import { DAnimeApi } from '@/content_script/api/danime'
 import { Logger } from '@/utils/logger'
 
 export default async () => {
+  injectScript(webext.runtime.getURL('plugins/dAnime.js'))
+
   const video = document.querySelector<HTMLVideoElement>('video#video')
 
   if (!video) return
