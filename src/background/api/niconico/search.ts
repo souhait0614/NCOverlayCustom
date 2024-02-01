@@ -15,7 +15,7 @@ export const search = async (
     _sort: query._sort ?? '+startTime',
     _offset: query._offset?.toString(),
     _limit: query._limit?.toString(),
-    _context: query._context ?? 'NCOverlay',
+    _context: query._context ?? 'NCOverlayHelper',
   }
 
   if (query.filters) {
@@ -40,7 +40,7 @@ export const search = async (
     const res = await fetch(url, {
       method: 'GET',
       headers: {
-        'User-Agent': 'NCOverlay/1.0',
+        'User-Agent': 'NCOverlayHelper/1.0',
       },
     })
     const json: Search = await res.json()
